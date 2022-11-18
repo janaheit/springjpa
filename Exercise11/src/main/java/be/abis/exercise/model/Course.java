@@ -1,11 +1,24 @@
 package be.abis.exercise.model;
 
+import javax.persistence.*;
+import java.util.Objects;
+
+@Entity
+@Table(name="Courses")
 public class Course {
 
-    private int courseId;
+	@SequenceGenerator(name="mySeqGen", sequenceName = "courses_cid_seq", allocationSize = 1)
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mySeqGen")
+    @Column(name="cid")
+	private int courseId;
+	@Column(name="cstitle")
 	private String shortTitle;
+	@Column(name="cltitle")
 	private String longTitle;
+	@Column(name="cdur")
 	private int numberOfDays;
+	@Column(name="caprice")
 	private double pricePerDay;
 	
 	public Course(){}
@@ -49,7 +62,16 @@ public class Course {
 		this.pricePerDay = pricePerDay;
 	}
 
-	
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Course course = (Course) o;
+		return courseId == course.courseId && numberOfDays == course.numberOfDays && Double.compare(course.pricePerDay, pricePerDay) == 0 && shortTitle.equals(course.shortTitle) && Objects.equals(longTitle, course.longTitle);
+	}
 
-	
+	@Override
+	public int hashCode() {
+		return Objects.hash(courseId, shortTitle, longTitle, numberOfDays, pricePerDay);
+	}
 }
