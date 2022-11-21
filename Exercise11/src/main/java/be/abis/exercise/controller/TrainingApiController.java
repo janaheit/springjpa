@@ -17,7 +17,7 @@ public class TrainingApiController {
 
     @GetMapping("sessions/query")
     List<Session> findSessionsForCourse(@RequestParam("title") String courseTitle){
-        return null;
+        return trainingService.findSessionsForCourse(courseTitle);
     }
 
     @GetMapping("persons/{id}/enrolments")

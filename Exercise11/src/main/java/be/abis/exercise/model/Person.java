@@ -2,29 +2,47 @@ package be.abis.exercise.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Objects;
 
+@Entity
+@Table(name = "Persons")
 public class Person {
 	
+	@SequenceGenerator(name = "mySeqGen", sequenceName = "persons_pno_seq", allocationSize = 1)
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mySeqGen")
+	@Column(name = "pno")
 	private int personId;
+	@Column(name = "pfname")
 	private String firstName;
+	@Column(name="plname")
 	private String lastName;
+	@Column(name = "pbirthdate")
 	@JsonFormat(pattern="dd/MM/yyyy")
 	private LocalDate birthDate;
+	@Column(name = "pemail")
 	private String emailAddress;
+	@Column(name = "ppass")
 	private String password;
+	@Column(name = "plang")
 	private String language;
+	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
+	@JoinColumn(name="pa_cono")
 	private Company company;
 
 	public Person(){}
-	public Person(int personId, String firstName, String lastName, LocalDate birthDate, String emailAddress, String password, String language, Company company) {
-		this.personId = personId;
+	public Person(String firstName, String lastName, LocalDate birthDate, String emailAddress, String password, String language) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.birthDate = birthDate;
 		this.emailAddress = emailAddress;
 		this.password = password;
 		this.language = language;
+	}
+	public Person(String firstName, String lastName, LocalDate birthDate, String emailAddress, String password, String language, Company company) {
+		this(firstName, lastName, birthDate, emailAddress, password, language);
 		this.company = company;
 	}
 
@@ -87,6 +105,16 @@ public class Person {
 		return "Person with id " + personId + ", " + firstName + " "+ lastName + ", works for " +company.getName() + " in " + company.getAddress().getTown();
 	}
 
-	
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Person person = (Person) o;
+		return personId == person.personId && firstName.equals(person.firstName) && Objects.equals(lastName, person.lastName) && Objects.equals(birthDate, person.birthDate) && Objects.equals(emailAddress, person.emailAddress) && Objects.equals(password, person.password) && Objects.equals(language, person.language) && Objects.equals(company, person.company);
+	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(personId, firstName, lastName, birthDate, emailAddress, password, language, company);
+	}
 }

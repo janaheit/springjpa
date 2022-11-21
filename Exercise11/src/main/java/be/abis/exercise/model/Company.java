@@ -1,10 +1,12 @@
 package be.abis.exercise.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "Companies")
-
 public class Company{
 
 	@SequenceGenerator(name="mySeqGen", sequenceName = "companies_cono_seq", allocationSize = 1)
@@ -20,6 +22,8 @@ public class Company{
 	private String vatNr;
 	@Embedded
 	private Address address;
+	@OneToMany(targetEntity = Person.class, mappedBy = "company", fetch = FetchType.EAGER)
+	private List<Person> employees = new ArrayList<>();
 
 	public Company(){}
 	public Company(String name, String telephoneNumber, String vatNr, Address address) {
@@ -27,6 +31,24 @@ public class Company{
 		this.telephoneNumber = telephoneNumber;
 		this.vatNr = vatNr;
 		this.address = address;
+	}
+
+	public List<Person> getEmployees() {
+		return employees;
+	}
+
+	public void setEmployees(List<Person> employees) {
+		this.employees = employees;
+	}
+
+	public void addEmployee(Person p){
+		this.employees.add(p);
+		p.setCompany(this);
+	}
+
+	public void removeEmployee(Person p){
+		this.employees.remove(p);
+		p.setCompany(null);
 	}
 
 	public int getCompanyId() {
@@ -65,6 +87,4 @@ public class Company{
 	public String toString(){
 		return name + " in " + address.getTown();
 	}
-	
-
 }

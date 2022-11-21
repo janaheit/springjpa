@@ -1,16 +1,36 @@
 package be.abis.exercise.model;
 
-import java.time.LocalDate;
+import be.abis.exercise.converter.CancelBooleanConverter;
 
+import javax.persistence.*;
+import java.time.LocalDate;
+@Entity
+@Table(name = "Sessions")
 public class Session {
 
+    @SequenceGenerator(name="mySeqGen", sequenceName = "sessions_sno_seq", allocationSize = 1)
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mySeqGen")
+    @Column(name="sno")
+
     private int sessionId;
+    @Column(name = "sdate")
     private LocalDate startDate;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
+    @JoinColumn(name="sins_pno")
     private Person instructor;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
+    @JoinColumn(name="sloc_cono")
     private Company location;
+    @Column(name="skind")
     private String kind;
+    @Column(name="sincomes")
     private double income;
+    @Column(name="scancel")
+    @Convert(converter = CancelBooleanConverter.class)
     private boolean cancelled;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
+    @JoinColumn(name="s_cid")
     private Course course;
 
     public Session(){}

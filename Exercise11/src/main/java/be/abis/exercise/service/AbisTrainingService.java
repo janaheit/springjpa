@@ -4,6 +4,7 @@ import be.abis.exercise.exception.EnrolException;
 import be.abis.exercise.model.Enrolment;
 import be.abis.exercise.model.Person;
 import be.abis.exercise.model.Session;
+import be.abis.exercise.repository.SessionJPARepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,8 @@ public class AbisTrainingService implements TrainingService {
 
     @Autowired
     private CourseService courseService;
+    @Autowired
+    SessionJPARepository sessionRepository;
 
     @Override
     public String getWelcomeMessage() {
@@ -47,7 +50,7 @@ public class AbisTrainingService implements TrainingService {
 
     @Override
     public List<Session> findSessionsForCourse(String courseTitle) {
-        return null;
+        return sessionRepository.findSessionsForCourse(courseTitle);
     }
 
 

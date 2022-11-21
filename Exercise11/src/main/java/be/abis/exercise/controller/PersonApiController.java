@@ -43,7 +43,7 @@ public class PersonApiController {
     }
 
     @PostMapping(path="")
-    public void addPerson(@RequestBody Person p) throws PersonAlreadyExistsException {
+    public void addPerson(@RequestBody Person p) throws PersonAlreadyExistsException, PersonNotFoundException {
         ps.addPerson(p);
     }
 

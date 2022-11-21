@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 public class CompanyRepositoryTest {
@@ -49,5 +48,10 @@ public class CompanyRepositoryTest {
     void deleteSTH(){
 
         companyRepository.deleteById(106);
+    }
+
+    @Test
+    void findEmployees(){
+        System.out.println(companyRepository.findById(1).getEmployees());
     }
 }

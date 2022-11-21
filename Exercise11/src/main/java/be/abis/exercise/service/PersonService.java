@@ -6,7 +6,6 @@ import be.abis.exercise.exception.PersonCanNotBeDeletedException;
 import be.abis.exercise.exception.PersonNotFoundException;
 import be.abis.exercise.model.Person;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface PersonService {
@@ -14,9 +13,9 @@ public interface PersonService {
     List<Person> getAllPersons();
     Person findPerson(int id) throws PersonNotFoundException;
     Person findPerson(String emailAddress, String passWord) throws PersonNotFoundException;
-    void addPerson(Person p) throws PersonAlreadyExistsException;
+    Person addPerson(Person p) throws PersonAlreadyExistsException, PersonNotFoundException;
     void deletePerson(int id) throws PersonCanNotBeDeletedException;
-    void changePassword(Person p, String newPswd);
+    Person changePassword(Person p, String newPswd) throws PersonNotFoundException;
     List<Person> findPersonsByCompanyName(String compName);
 
 }
