@@ -1,5 +1,7 @@
 package be.abis.exercise.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +24,8 @@ public class Company{
 	private String vatNr;
 	@Embedded
 	private Address address;
-	@OneToMany(targetEntity = Person.class, mappedBy = "company", fetch = FetchType.EAGER)
+	//@JsonIgnore
+	@OneToMany(targetEntity = Person.class, mappedBy = "company", fetch = FetchType.LAZY)
 	private List<Person> employees = new ArrayList<>();
 
 	public Company(){}

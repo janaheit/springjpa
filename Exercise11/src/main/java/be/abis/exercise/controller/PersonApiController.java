@@ -1,8 +1,11 @@
 package be.abis.exercise.controller;
 
+import be.abis.exercise.dto.PersonCreationDTO;
+import be.abis.exercise.dto.PersonDTO;
 import be.abis.exercise.exception.PersonAlreadyExistsException;
 import be.abis.exercise.exception.PersonCanNotBeDeletedException;
 import be.abis.exercise.exception.PersonNotFoundException;
+import be.abis.exercise.mapper.PersonMapper;
 import be.abis.exercise.model.Login;
 import be.abis.exercise.model.Person;
 import be.abis.exercise.service.PersonService;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("persons")
@@ -23,28 +27,40 @@ public class PersonApiController {
     PersonService ps;
 
     @GetMapping("")
-    public List<Person> getAllPersons(){
-        return ps.getAllPersons();
+    public List<PersonDTO> getAllPersons(){
+        return ps.getAllPersons().stream()
+                .map(person -> PersonMapper.toDTO(person))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("{id}")
-    public Person findPerson(@PathVariable("id") int id) throws PersonNotFoundException {
-       return ps.findPerson(id);
+    public PersonDTO findPerson(@PathVariable("id") int id) throws PersonNotFoundException {
+        // TODO exception handling when person is null
+        Person p = ps.findPerson(id);
+        return PersonMapper.toDTO(p);
     }
 
     @PostMapping("/login")
-    public Person findPersonByMailAndPwd(@RequestBody Login login) throws PersonNotFoundException {
-        return ps.findPerson(login.getEmail(), login.getPassword());
+    public PersonDTO findPersonByMailAndPwd(@RequestBody Login login) throws PersonNotFoundException {
+        Person p = ps.findPerson(login.getEmail(), login.getPassword());
+        return PersonMapper.toDTO(p);
     }
 
     @GetMapping(path="/compquery")
-    public List<Person> findPersonsByCompanyName(@RequestParam("compname") String compName) {
-        return ps.findPersonsByCompanyName(compName);
+    public List<PersonDTO> findPersonsByCompanyName(@RequestParam("compname") String compName) {
+        List<PersonDTO> personDTOList = ps.findPersonsByCompanyName(compName).stream()
+                .map(person -> PersonMapper.toDTO(person))
+                .collect(Collectors.toList());
+
+        return personDTOList;
     }
 
     @PostMapping(path="")
-    public void addPerson(@RequestBody Person p) throws PersonAlreadyExistsException, PersonNotFoundException {
-        ps.addPerson(p);
+    public PersonDTO addPerson(@RequestBody PersonCreationDTO pcDTO) throws PersonAlreadyExistsException, PersonNotFoundException {
+
+        Person p = PersonMapper.toPerson(pcDTO);
+        Person personDB = ps.addPerson(p);
+        return PersonMapper.toDTO(personDB);
     }
 
     @DeleteMapping("{id}")

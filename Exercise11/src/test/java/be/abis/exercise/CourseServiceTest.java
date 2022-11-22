@@ -44,6 +44,7 @@ public class CourseServiceTest {
 		assertEquals(c, courseService.updateCourse(c));
 	}
 
+	@Transactional
 	@Test
 	void deleteCourse(){
 		courseService.deleteCourse(8057);

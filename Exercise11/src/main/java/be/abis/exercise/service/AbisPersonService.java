@@ -39,6 +39,7 @@ public class AbisPersonService implements PersonService {
     @Override
     @Transactional
     public Person addPerson(Person p) throws PersonAlreadyExistsException, PersonNotFoundException {
+        // find by ID cannot find an existing person, TODO fix
         Person existingPerson = personRepository.findByPersonId(p.getPersonId());
         if (existingPerson == null){
             if (p.getCompany() != null){

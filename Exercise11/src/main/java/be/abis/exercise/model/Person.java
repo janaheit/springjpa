@@ -20,7 +20,6 @@ public class Person {
 	@Column(name="plname")
 	private String lastName;
 	@Column(name = "pbirthdate")
-	@JsonFormat(pattern="dd/MM/yyyy")
 	private LocalDate birthDate;
 	@Column(name = "pemail")
 	private String emailAddress;

@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface CompanyJPARepository extends JpaRepository<Company, Integer> {
 
+	@Query(value = "select c from Company c join fetch c.employees where c.companyId = :id")
 	Company findById(int id);
 	Company findByName(String name);
 	List<Company> findByNameStartingWith(String startingWith);
