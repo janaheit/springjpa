@@ -8,6 +8,8 @@ import be.abis.exercise.model.Person;
 import be.abis.exercise.repository.CompanyJPARepository;
 import be.abis.exercise.repository.PersonJPARepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -28,19 +30,23 @@ public class AbisPersonService implements PersonService {
 
     @Override
     public Person findPerson(int id) throws PersonNotFoundException {
-        return personRepository.findByPersonId(id);
+        Person p = personRepository.findByPersonId(id);
+        if (p ==null) throw new PersonNotFoundException("Person with id " + id + " was not found.");
+        return p;
     }
 
     @Override
     public Person findPerson(String emailAddress, String passWord) throws PersonNotFoundException {
-        return personRepository.findByEmailAddressAndPassword(emailAddress, passWord);
+        Person p = personRepository.findByEmailAddressAndPassword(emailAddress, passWord);
+        if (p ==null) throw new PersonNotFoundException("Person with email " + emailAddress + " was not found.");
+        return p;
     }
 
     @Override
     @Transactional
-    public Person addPerson(Person p) throws PersonAlreadyExistsException, PersonNotFoundException {
-        // find by ID cannot find an existing person, TODO fix
-        Person existingPerson = personRepository.findByPersonId(p.getPersonId());
+    public Person addPerson(Person p) throws PersonAlreadyExistsException{
+        Person existingPerson = personRepository.findByEmailAddress(p.getEmailAddress());
+
         if (existingPerson == null){
             if (p.getCompany() != null){
                 Company c = companyRepository.findByNameAndTown(p.getCompany().getName().toUpperCase(), p.getCompany().getAddress().getTown().toUpperCase());
@@ -49,14 +55,24 @@ public class AbisPersonService implements PersonService {
 
             return personRepository.save(p);
         } else {
-            System.out.println("Person " + p.getFirstName() + " already exists...");
-            return null;
+            throw new PersonAlreadyExistsException("This person with id "+ p.getPersonId() + " and email "
+            + p.getEmailAddress() + " already exists.");
         }
     }
 
     @Override
     public void deletePerson(int id) throws PersonCanNotBeDeletedException {
-        personRepository.deleteById(id);
+        try {
+            personRepository.deleteById(id);
+        } catch (DataIntegrityViolationException | EmptyResultDataAccessException e){
+            throw new PersonCanNotBeDeletedException("Person cannot be deleted: " + e.getMessage());
+        }
+    }
+
+    public Person findPerson(String email) throws PersonNotFoundException {
+        Person p = personRepository.findByEmailAddress(email);
+        if (p==null) throw new PersonNotFoundException("person was not found");
+        return p;
     }
 
     @Override
@@ -66,8 +82,7 @@ public class AbisPersonService implements PersonService {
             p.setPassword(newPswd);
             return personRepository.save(p);
         } else {
-            System.out.println("Person " + p.getFirstName() + " does not eists...");
-            return null;
+            throw new PersonNotFoundException("Person with id " + p.getPersonId() + " could not be found.");
         }
     }
 

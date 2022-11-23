@@ -17,8 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
@@ -29,12 +28,16 @@ public class PersonServiceTest {
     PersonService personService;
 
 	@Test
-	@Order(1)
 	public void person1ShouldBeCalledJan() throws PersonNotFoundException {
 		String firstName = personService.findPerson(1).getFirstName();
 		assertEquals("jan",firstName.trim().toLowerCase());
 	}
 
+
+	@Test
+	public void person10000ThrowsException() {
+		assertThrows(PersonNotFoundException.class,  () -> personService.findPerson(1000));
+	}
 	/*@Test
 	@Order(2)
 	public void thereShouldBe3PersonsInTheFile(){
@@ -44,7 +47,7 @@ public class PersonServiceTest {
 	 */
 
 	@Test
-	//@Transactional
+	@Transactional
 	public void addNewPersonWithExistingCompany() throws PersonAlreadyExistsException, PersonNotFoundException {
 		Address a = new Address("Diestsevest","32","3000","Leuven","B");
 		Company c = new Company("Abis","016/455610","BE12345678",a);
@@ -53,7 +56,7 @@ public class PersonServiceTest {
 	}
 
 	@Test
-	//@Transactional
+	@Transactional
 	public void addNewPersonWithNewCompany() throws PersonAlreadyExistsException, PersonNotFoundException {
 		Address a = new Address("Diestsevest","33","3000","Leuven","B");
 		Company c = new Company("Microsoft","016/465610","BE12355678",a);
@@ -62,7 +65,7 @@ public class PersonServiceTest {
 	}
 
 	@Test
-	//@Transactional
+	@Transactional
 	public void addNewPersonWithoutCompany() throws PersonAlreadyExistsException, PersonNotFoundException {
 		Person p = new Person("Sam","Schillebeeckx", LocalDate.of(1978,04,10),"sschillebekx@abis.be","abis123","nl");
 		assertEquals(p, personService.addPerson(p));
@@ -70,13 +73,22 @@ public class PersonServiceTest {
 
 	@Test
 	@Transactional
-	public void deleteAddedPerson() throws PersonCanNotBeDeletedException, PersonNotFoundException {
+	public void addNewPersonWithoutCompanyButExistingEmail(){
+		Person p = new Person("Sam","Schillebeeckx",
+				LocalDate.of(1978,04,10),
+				"john.doe@gmail.com","abis123","nl");
+		assertThrows(PersonAlreadyExistsException.class, () -> personService.addPerson(p));
+	}
+
+	@Test
+	@Transactional
+	public void deleteAddedPerson() throws PersonCanNotBeDeletedException {
 		personService.deletePerson(135);
-		assertNull(personService.findPerson(135));
+		assertThrows(PersonNotFoundException.class, () -> personService.findPerson(135));
 	}
 
 	void deleteInexistingPerson(){
-		//TODO
+		assertThrows(PersonCanNotBeDeletedException.class, () -> personService.findPerson(1000));
 	}
 
 	@Test
@@ -87,10 +99,10 @@ public class PersonServiceTest {
 	}
 
 	@Test
-	void findByWrongEmailAndPassword() throws PersonNotFoundException {
+	void findByWrongEmailAndPassword(){
 		String email = "johndoe@gmail.com";
 		String password = "jd456";
-		assertNull(personService.findPerson(email, password));
+		assertThrows(PersonNotFoundException.class, () -> personService.findPerson(email, password));
 	}
 
 	@Test
@@ -120,12 +132,5 @@ public class PersonServiceTest {
 	}
 
 	 */
-
-
-
-
-
-	
-	
 
 }

@@ -12,6 +12,7 @@ import be.abis.exercise.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,7 +57,7 @@ public class PersonApiController {
     }
 
     @PostMapping(path="")
-    public PersonDTO addPerson(@RequestBody PersonCreationDTO pcDTO) throws PersonAlreadyExistsException, PersonNotFoundException {
+    public PersonDTO addPerson(@Valid @RequestBody PersonCreationDTO pcDTO) throws PersonAlreadyExistsException, PersonNotFoundException {
 
         Person p = PersonMapper.toPerson(pcDTO);
         Person personDB = ps.addPerson(p);

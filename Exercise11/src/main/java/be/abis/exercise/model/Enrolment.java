@@ -24,7 +24,7 @@ public class Enrolment {
     private Session session;
 
     @JoinColumn(name = "e_pno")
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Person enrollee;
     @Id
     @Column(name = "eno")

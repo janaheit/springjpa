@@ -26,4 +26,14 @@ public class EnrolmentRepositoryTest {
             }
         }
     }
+
+    @Test
+    void countEnrolmentsBySession(){
+        System.out.println(enrolmentRepository.countEnrolmentsForSession(1));
+    }
+
+    @Test
+    void countEnrolmentsForSessionThatHas0(){
+        System.out.println(enrolmentRepository.countEnrolmentsForSession(5));
+    }
 }

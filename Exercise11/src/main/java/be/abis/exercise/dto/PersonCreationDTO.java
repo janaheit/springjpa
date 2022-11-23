@@ -1,15 +1,13 @@
 package be.abis.exercise.dto;
 
-import be.abis.exercise.model.Address;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.stereotype.Component;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 
 public class PersonCreationDTO {
     private String firstName;
+    @NotBlank(message = "last name is mandatory")
     private String lastName;
     private String email;
     private String password;

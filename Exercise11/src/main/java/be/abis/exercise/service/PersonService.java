@@ -13,9 +13,9 @@ public interface PersonService {
     List<Person> getAllPersons();
     Person findPerson(int id) throws PersonNotFoundException;
     Person findPerson(String emailAddress, String passWord) throws PersonNotFoundException;
-    Person addPerson(Person p) throws PersonAlreadyExistsException, PersonNotFoundException;
+    Person addPerson(Person p) throws PersonAlreadyExistsException;
     void deletePerson(int id) throws PersonCanNotBeDeletedException;
     Person changePassword(Person p, String newPswd) throws PersonNotFoundException;
     List<Person> findPersonsByCompanyName(String compName);
-
+    Person findPerson(String email) throws PersonNotFoundException;
 }
