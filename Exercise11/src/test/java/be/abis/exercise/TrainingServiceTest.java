@@ -91,4 +91,21 @@ public class TrainingServiceTest {
 
         assertThrows(EnrolException.class, () -> trainingService.enrolForSession(p, 5000));
     }
+
+    @Transactional
+    @Test
+    void addCompanySession(){
+        Session existing = trainingService.findSession(4);
+        CompanySession s = new CompanySession();
+        s.setCancelled(false);
+        s.setCourse(existing.getCourse());
+        s.setIncome(existing.getIncome());
+        s.setInstructor(existing.getInstructor());
+        s.setStartDate(existing.getStartDate());
+        s.setLocation(existing.getLocation());
+
+        Session added = trainingService.addSession(s);
+        System.out.println(added.getSessionId() + " is from class " + added.getClass());
+        assertTrue(added instanceof CompanySession);
+    }
 }

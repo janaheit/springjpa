@@ -87,8 +87,10 @@ public class PersonServiceTest {
 		assertThrows(PersonNotFoundException.class, () -> personService.findPerson(135));
 	}
 
+	@Transactional
+	@Test
 	void deleteInexistingPerson(){
-		assertThrows(PersonCanNotBeDeletedException.class, () -> personService.findPerson(1000));
+		assertThrows(PersonCanNotBeDeletedException.class, () -> personService.deletePerson(1000));
 	}
 
 	@Test
@@ -113,6 +115,20 @@ public class PersonServiceTest {
 		Person p = personService.findPerson(email, password);
 		Person check = personService.changePassword(p,"blabla");
 		assertEquals(p.getPassword(), check.getPassword());
+	}
+
+	@Test
+	@Transactional
+	void findPersonsHobbies() throws PersonNotFoundException {
+		Person p = personService.findPerson(3);
+		System.out.println(p.getHobbies());
+	}
+
+	@Test
+	@Transactional
+	void addHobbyToExistingPersonWithoutExistingHobbies() throws PersonNotFoundException {
+		Person p = personService.addHobbyToPerson(5, "Skateboarding");
+		assertTrue(p.getHobbies().contains("Skateboarding"));
 	}
 
 	/*

@@ -60,6 +60,14 @@ public class AbisPersonService implements PersonService {
         }
     }
 
+    @Transactional
+    @Override
+    public Person addHobbyToPerson(int personID, String hobby) throws PersonNotFoundException {
+        Person p = personRepository.findByPersonId(personID);
+        p.addHobby(hobby);
+        return personRepository.save(p);
+    }
+
     @Override
     public void deletePerson(int id) throws PersonCanNotBeDeletedException {
         try {

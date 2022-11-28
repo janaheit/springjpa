@@ -6,8 +6,11 @@ import be.abis.exercise.repository.CompanyJPARepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import javax.transaction.Transactional;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class CompanyRepositoryTest {
@@ -30,6 +33,7 @@ public class CompanyRepositoryTest {
         assertEquals(3, companyRepository.findByNameAndTown("ABIS N.V.", "LEUVEN").getCompanyId());
     }
 
+    @Transactional
     @Test
     void insertSTH(){
         Address a = new Address();
@@ -41,13 +45,17 @@ public class CompanyRepositoryTest {
         Company c = new Company();
         c.setName("company test");
         c.setAddress(a);
-        companyRepository.save(c);
+        Company newC = companyRepository.save(c);
+        assertEquals("company test", newC.getName());
     }
 
-    @Test
-    void deleteSTH(){
 
-        companyRepository.deleteById(106);
+    @Transactional
+    @Test
+    void deleteCompanyWithUsedForeignKeyReturnsForeignKeyConstraint(){
+
+        companyRepository.deleteById(25);
+        assertThrows(DataIntegrityViolationException.class, () -> companyRepository.findById(25));
     }
 
     @Test

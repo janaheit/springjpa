@@ -18,4 +18,5 @@ public interface PersonService {
     Person changePassword(Person p, String newPswd) throws PersonNotFoundException;
     List<Person> findPersonsByCompanyName(String compName);
     Person findPerson(String email) throws PersonNotFoundException;
+    Person addHobbyToPerson(int personID, String hobby) throws PersonNotFoundException;
 }

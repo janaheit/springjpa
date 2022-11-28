@@ -125,5 +125,10 @@ public class AbisTrainingService implements TrainingService {
     public long countEnrolments(){
         return enrolmentRepository.count();
     }
+
+    @Override
+    public Session addSession(Session s) {
+        return sessionRepository.save(s);
+    }
 }
 

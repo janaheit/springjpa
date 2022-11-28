@@ -20,4 +20,9 @@ public class SessionRepositoryTest {
         String courseTitle = "IMSDB";
         System.out.println(sessionRepository.findSessionsForCourse(courseTitle));
     }
+
+    @Test
+    void findByIdTestSubclass(){
+        System.out.println(sessionRepository.findBySessionId(2).getClass());
+    }
 }

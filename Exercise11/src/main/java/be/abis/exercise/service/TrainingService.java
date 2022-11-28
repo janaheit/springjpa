@@ -24,6 +24,7 @@ public interface TrainingService {
     void cancelSession(int id);
     Session findSession(int id);
     long countEnrolments();
+    Session addSession(Session s);
 
 
 }

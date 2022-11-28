@@ -1,9 +1,12 @@
 package be.abis.exercise.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.security.core.userdetails.User;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -21,7 +24,7 @@ public class Person {
 	private String lastName;
 	@Column(name = "pbirthdate")
 	private LocalDate birthDate;
-	@Column(name = "pemail")
+	@Column(name = "pemail", unique = true)
 	private String emailAddress;
 	@Column(name = "ppass")
 	private String password;
@@ -30,6 +33,11 @@ public class Person {
 	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
 	@JoinColumn(name="pa_cono")
 	private Company company;
+	@ElementCollection
+	@CollectionTable(name = "Hobbies", joinColumns = @JoinColumn(name = "h_pno"))
+	@OrderColumn(name = "h_hno")
+	@Column(name = "h_hobby")
+	private List<String> hobbies = new ArrayList<>();
 
 	public Person(){}
 	public Person(String firstName, String lastName, LocalDate birthDate, String emailAddress, String password, String language) {
@@ -43,6 +51,18 @@ public class Person {
 	public Person(String firstName, String lastName, LocalDate birthDate, String emailAddress, String password, String language, Company company) {
 		this(firstName, lastName, birthDate, emailAddress, password, language);
 		this.company = company;
+	}
+
+	public List<String> getHobbies() {
+		return hobbies;
+	}
+
+	public void addHobby(String hobby){
+		hobbies.add(hobby);
+	}
+
+	public void setHobbies(List<String> hobbies) {
+		this.hobbies = hobbies;
 	}
 
 	public int getPersonId() {

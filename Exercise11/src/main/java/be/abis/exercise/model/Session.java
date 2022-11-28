@@ -5,6 +5,8 @@ import be.abis.exercise.converter.CancelBooleanConverter;
 import javax.persistence.*;
 import java.time.LocalDate;
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "skind", discriminatorType = DiscriminatorType.STRING)
 @Table(name = "Sessions")
 public class Session {
 
@@ -22,8 +24,8 @@ public class Session {
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
     @JoinColumn(name="sloc_cono")
     private Company location;
-    @Column(name="skind")
-    private String kind;
+    //@Column(name="skind")
+    //private String kind;
     @Column(name="sincomes")
     private double income;
     @Column(name="scancel")
@@ -75,13 +77,15 @@ public class Session {
         this.income = income;
     }
 
-    public String getKind() {
+    /*public String getKind() {
         return kind;
     }
 
     public void setKind(String kind) {
         this.kind = kind;
     }
+
+     */
 
     public boolean isCancelled() {
         return cancelled;
